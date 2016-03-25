@@ -1,0 +1,39 @@
+#!/bin/bash
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 r 5 
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 6 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+java -cp /Users/snehi23/Documents/workspace/SER421_Lab1/bin/ SockClient6 t 5 10
+
