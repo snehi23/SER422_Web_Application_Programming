@@ -1,0 +1,19 @@
+# build files
+*.class
+**/build/
+**/classes/
+**/bin/
+
+# Emacs stuff
+.#*
+*~
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Eclipse
+*.project
+*.settings
+*.classpath
