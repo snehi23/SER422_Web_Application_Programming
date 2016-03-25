@@ -1,0 +1,19 @@
+----------------------------------------------------------------
+Fri Mar 04 17:50:15 MST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0153-4440-def2-000006fd8a60 
+on database directory /Users/snehi23/Documents/workspace/SER421_Lab3/derby_home/booktowndb with class loader sun.misc.Launcher$AppClassLoader@1d44bcfa 
+Loaded from file:/Users/snehi23/Downloads/db-derby-10.12.1.1-bin/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_51-b16
+user.dir=/Users/snehi23/Documents/workspace/SER421_Lab3/derby_home
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.11.2
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Fri Mar 04 17:58:01 MST 2016: Shutting down Derby engine
+----------------------------------------------------------------
+Fri Mar 04 17:58:01 MST 2016:
+Shutting down instance a816c00e-0153-4440-def2-000006fd8a60 on database directory /Users/snehi23/Documents/workspace/SER421_Lab3/derby_home/booktowndb with class loader sun.misc.Launcher$AppClassLoader@1d44bcfa 
+----------------------------------------------------------------
