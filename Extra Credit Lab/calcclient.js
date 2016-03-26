@@ -9,5 +9,5 @@ sock.on('close', function() {
 });
 // now make a request
 sock.connect(3000);
-sock.write(JSON.stringify({command:process.argv[2], val:process.argv[3]}));
+sock.write(JSON.stringify({clientID:process.argv[2], command:process.argv[3], val:process.argv[4]}));
 sock.end();
