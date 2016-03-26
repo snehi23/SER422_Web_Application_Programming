@@ -1,7 +1,16 @@
 // simplesockclient to go with simplesockserver.js
 var sock = require('net').Socket();
 sock.on('data', function(data) {
-	console.log('Response: ' + data);
+
+	var list = JSON.parse(data);
+
+	if(Array.isArray(list)) {
+		console.log('All Records:');
+		for(var i in list)
+			console.log('ClientID : '+i+' Total : '+list[i]);
+	}	else
+		console.log('Response: ' + list);
+
 	sock.destroy(); // kill client after server's response
 });
 sock.on('close', function() {

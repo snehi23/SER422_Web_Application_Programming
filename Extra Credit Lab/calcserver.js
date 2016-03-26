@@ -1,7 +1,7 @@
 // simple socket server
 var net = require('net');
 var total = '';
-var totals = new Map();
+var totals = [];
 
 
 net.createServer(function (sock) {
@@ -15,24 +15,28 @@ net.createServer(function (sock) {
 
       switch (d.command) {
         case 'a':
-                if(totals.get(d.clientID) == undefined)
-                    totals.set(d.clientID,Number(d.val));
+                if(totals[d.clientID] == undefined)
+                    totals[d.clientID] = Number(d.val);
                 else
-                    totals.set(d.clientID,Number(totals.get(d.clientID))+Number(d.val));
-                total = totals.get(d.clientID);
+                    totals[d.clientID] = Number(d.val) + Number(totals[d.clientID]);
+                total = Number(totals[d.clientID]);
           break;
         case 'm':
-                if(totals.get(d.clientID) == undefined)
-                    totals.set(d.clientID,Number(d.val));
+                if(totals[d.clientID] == undefined)
+                    totals[d.clientID] = Number(d.val);
                 else
-                    totals.set(d.clientID,Number(totals.get(d.clientID))-Number(d.val));
-                total = totals.get(d.clientID);
+                    totals[d.clientID] = Number(d.val) - Number(totals[d.clientID]);
+                total = Number(totals[d.clientID]);
           break;
         case 's':
-                totals.set(d.clientID,Number(d.val));
-                total = totals.get(d.clientID);
+                totals[d.clientID] = Number(d.val);
+                ttotal = Number(totals[d.clientID]);
           break;
         case 'q':
+                console.log(JSON.stringify(totals));
+                sock.write(JSON.stringify(totals), function() {
+                  console.log("Finished response to client");
+                })
                 process.exit(0);
           break;
         default:
