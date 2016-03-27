@@ -1,15 +1,20 @@
-// simplesockclient to go with simplesockserver.js
+// calcclient.js to go with calcserver.js
 var sock = require('net').Socket();
 sock.on('data', function(data) {
 
-	var list = JSON.parse(data);
+	if(typeof JSON.parse(data) == 'string')
+		console.log('Response: ' + JSON.parse(data));
+	else {
+		var list = {};
+		list = JSON.parse(data);
 
-	if(Array.isArray(list)) {
-		console.log('All Records:');
-		for(var i in list)
-			console.log('ClientID : '+i+' Total : '+list[i]);
-	}	else
-		console.log('Response: ' + list);
+		if(typeof list == 'object') {
+			console.log('All Records:');
+			for(var i in list)
+				console.log('ClientID : '+i+' Total : '+list[i]);
+		}	else
+			console.log('Response: ' + list);
+		}
 
 	sock.destroy(); // kill client after server's response
 });

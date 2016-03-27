@@ -1,8 +1,7 @@
 // simple socket server
 var net = require('net');
 var total = '';
-var totals = [];
-
+var totals = {};
 
 net.createServer(function (sock) {
     console.log("Incoming connection accepted");
@@ -30,20 +29,20 @@ net.createServer(function (sock) {
           break;
         case 's':
                 totals[d.clientID] = Number(d.val);
-                ttotal = Number(totals[d.clientID]);
+                total = Number(totals[d.clientID]);
           break;
         case 'q':
-                console.log(JSON.stringify(totals));
                 sock.write(JSON.stringify(totals), function() {
                   console.log("Finished response to client");
                 })
                 process.exit(0);
           break;
         default:
-                total = "Invalid request specification USAGE: node calcclient.js <client> <cmd> <val>";
+                total = 'Invalid request specification [USAGE: node calcclient.js <client> <cmd> <val>]';
 
       }
-        sock.write(total.toString(), function() {
+      console.log(JSON.stringify(total));
+        sock.write(JSON.stringify(total), function() {
         	console.log("Finished response to client");
         })
     }).on('error', function (e) {
