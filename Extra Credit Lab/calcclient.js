@@ -10,17 +10,19 @@ sock.on('data', function(data) {
 			if(typeof list == 'object') {
 				if(list.length > 0) {
 					console.log('All Records:');
-				for(var i in list)
-					console.log('ClientID : '+i+' Total : '+list[i]);
+					for(var i in list)
+						console.log('ClientID : '+i+' Total : '+list[i]);
 				} else {
 					console.log('No records found!');
-				}	
+				}
 			}	else
 				console.log('Response: ' + list);
 		}
 
 	sock.destroy();
-});
+}).on('error', function (e) {
+console.log("Error connecting to server");
+});;
 sock.on('close', function() {
 	console.log('Connection closed');
 });
