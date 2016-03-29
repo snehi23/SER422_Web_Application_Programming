@@ -3,17 +3,20 @@ var net = require('net');
 var total = '';
 var totals = {};
 var EventEmitter = require('events').EventEmitter;
-var delay = new EventEmitter();
+var customEvent = new EventEmitter();
+
+customEvent.on('lumberjack', function () {
+      console.log('I saw a lumberjack!');
+});
 
 net.createServer(function (sock) {
-
     console.log("Incoming connection accepted");
     sock.on('data', function (data) {
       console.log("Received from client: " +data);
       var d = JSON.parse(data);
       if(d.val == undefined || isNaN(d.val))
           d.command = '';
-          
+
       switch (d.command) {
         case 'a':
                 if(totals[d.clientID] == undefined)
@@ -43,11 +46,16 @@ net.createServer(function (sock) {
                 total = 'Invalid request specification [USAGE: node calcclient.js <client> <cmd> <val>]';
 
       }
+
+        if(d.clientID == 'NAU') {
+          customEvent.emit('lumberjack');
+        }
+
         if(d.clientID == 'UA') {
           process.nextTick(function () {
-          sock.write(JSON.stringify(total), function() {
-          console.log("Finished response to client");
-        })});
+            sock.write(JSON.stringify(total), function() {
+                console.log("Finished response to client");
+          })});
         } else {
           sock.write(JSON.stringify(total), function() {
             console.log("Finished response to client");
