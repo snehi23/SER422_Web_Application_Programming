@@ -7,6 +7,7 @@ var customEvent = new EventEmitter();
 
 customEvent.on('lumberjack', function () {
         console.log('I saw a lumberjack!');
+        total = 'I saw a lumberjack!';
 });
 
 net.createServer(function (sock) {
@@ -14,6 +15,7 @@ net.createServer(function (sock) {
     sock.on('data', function (data) {
       console.log("Received from client: " +data);
       var d = JSON.parse(data);
+
       if(d.val == undefined || isNaN(d.val))
           d.command = '';
 
@@ -46,7 +48,6 @@ net.createServer(function (sock) {
                 total = 'Invalid request specification';
 
       }
-
         if(d.clientID == 'NAU') {
           customEvent.emit('lumberjack');
         }
@@ -56,6 +57,14 @@ net.createServer(function (sock) {
             sock.write(JSON.stringify(total), function() {
                 console.log("Finished response to client");
           })});
+
+        } else if(d.clientID == 'ASU') {
+          setTimeout(function(){
+            sock.write(JSON.stringify(total), function() {
+                console.log("Finished response to client");
+            });
+          },30000);
+
         } else {
           sock.write(JSON.stringify(total), function() {
             console.log("Finished response to client");

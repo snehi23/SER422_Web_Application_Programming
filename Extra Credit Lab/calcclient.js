@@ -8,7 +8,7 @@ sock.on('data', function(data) {
 			list = JSON.parse(data);
 
 			if(typeof list == 'object') {
-				if(list.length > 0) {
+				if(Object.keys(list).length > 0) {
 					console.log('All Records:');
 					for(var i in list)
 						console.log('ClientID : '+i+' Total : '+list[i]);
@@ -28,4 +28,3 @@ sock.on('close', function() {
 });
 sock.connect(3000);
 sock.write(JSON.stringify({clientID:process.argv[2], command:process.argv[3], val:process.argv[4]}));
-sock.end();
