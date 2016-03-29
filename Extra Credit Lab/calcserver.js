@@ -1,4 +1,3 @@
-// simple socket server
 var net = require('net');
 var total = '';
 var totals = {};
