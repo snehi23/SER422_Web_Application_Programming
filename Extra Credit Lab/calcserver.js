@@ -6,7 +6,7 @@ var EventEmitter = require('events').EventEmitter;
 var customEvent = new EventEmitter();
 
 customEvent.on('lumberjack', function () {
-      console.log('I saw a lumberjack!');
+        console.log('I saw a lumberjack!');
 });
 
 net.createServer(function (sock) {
@@ -43,7 +43,7 @@ net.createServer(function (sock) {
                 process.exit(0);
           break;
         default:
-                total = 'Invalid request specification [USAGE: node calcclient.js <client> <cmd> <val>]';
+                total = 'Invalid request specification';
 
       }
 
