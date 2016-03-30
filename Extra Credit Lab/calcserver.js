@@ -6,7 +6,7 @@ var customEvent = new EventEmitter();
 
 customEvent.on('lumberjack', function () {
         console.log('I saw a lumberjack!');
-        total = 'I saw a lumberjack!';
+        total = total + ' I saw a lumberjack!';
 });
 
 net.createServer(function (sock) {
