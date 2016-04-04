@@ -17,3 +17,6 @@
 *.project
 *.settings
 *.classpath
+
+# Log files
+*.log
