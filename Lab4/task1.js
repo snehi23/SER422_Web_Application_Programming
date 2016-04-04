@@ -11,6 +11,10 @@ http.createServer(function (req, res) {
 if(req.method == 'GET') {
 	if(req.url == '/')
 		showIndexPage(res);
+
+  if(req.url == '/coders')
+    displayRecords(res);
+
 }
 
 if(req.method == 'POST') {
@@ -55,5 +59,14 @@ function storeRecord(req, res) {
   res.writeHead(301,
   {Location: '/'}
   );
+  res.end();
+}
+
+function displayRecords(res) {
+
+  res.writeHead(200, {
+  'Content-Type': 'text/html',
+  });
+  res.write(JSON.stringify(allRecords));
   res.end();
 }
