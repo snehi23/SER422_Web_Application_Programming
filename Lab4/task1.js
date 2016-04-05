@@ -67,13 +67,15 @@ function displayRecords(req, res) {
 	// Parse GET Query
 	var query = url.parse(req.url, true).query;
 
+	console.log(query);
+	var filteredRecords = filterRecords(query);
+
 	// GET Query no-cache settings
   res.writeHead(200, {
   'Content-Type': 'text/html',
 	'Cache-Control': 'no-cache, no-store, must-revalidate',
 	'Pragma': 'no-cache'
   });
-
 	var html = '';
 	// Detect user-agent from headers
 	var userAgent = req.headers['user-agent'];
@@ -83,10 +85,58 @@ function displayRecords(req, res) {
 	else
 	 	html += '<HTML><HEAD><TITLE>VIEW CODER DETAILS</TITLE></HEAD><BODY>';
 
-		for(var i in allRecords)
-			html += (Number(i)+1) + '. '+allRecords[i]['fname'] + ' '+allRecords[i]['lname'] + ' '+allRecords[i]['progLanguages'] + ' '+allRecords[i]['daysOfWeek']+ ' '+allRecords[i]['hairColor']+'</br>';
+		for(var i in filteredRecords)
+			html += (Number(i)+1) + '. '+filteredRecords[i]['fname'] + ' '+filteredRecords[i]['lname'] + ' '+filteredRecords[i]['progLanguages'] + ' '+filteredRecords[i]['daysOfWeek']+ ' '+filteredRecords[i]['hairColor']+'</br>';
 		html +=	'</BODY></HTML>';
 
 	res.write(html);
   res.end();
+}
+
+function filterRecords(query) {
+
+	var filteredRecords = [];
+
+	if(Object.keys(query).length == 0 || (query['fname'] == '' && query['lname'] == '' && query['progLanguages'] == '' && query['daysOfWeek'] == '' && query['hairColor'] == '')) {
+		return allRecords;
+	}
+	else {
+		
+		for(var i in allRecords) {
+
+			var isExist = false;
+
+			if(query['fname'] == '' || !allRecords[i]['fname'].includes(query['fname']))
+				continue;
+			if(query['lname'] == '' || !allRecords[i]['lname'].includes(query['lname']))
+				continue;
+			if(query['hairColor'] == '' || !(allRecords[i]['hairColor'] == query['hairColor']))
+				continue;
+
+			for(var j in query['progLanguages']) {
+					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'][j]) > -1) {
+							isExist = true;
+							break;
+					}
+			}
+
+			if(!isExist)
+				continue;
+
+			isExist  = false;
+
+			for(var j in query['daysOfWeek']) {
+					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'][j]) > -1) {
+							isExist = true;
+							break;
+					}
+			}
+
+			if(!isExist)
+				continue;
+
+			filteredRecords.push(allRecords[i]);
+		}
+	}
+	return filteredRecords;
 }
