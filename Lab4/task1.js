@@ -1,6 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 var querystring = require('querystring');
+var url = require('url');
 
 var allRecords = [];
 var allParams = '';
@@ -12,8 +13,8 @@ if(req.method == 'GET') {
 	if(req.url == '/')
 		showIndexPage(res);
 
-  if(req.url == '/coders')
-    displayRecords(res);
+  if(url.parse(req.url)['pathname'] == '/coders')
+    displayRecords(req, res);
 
 }
 
@@ -62,11 +63,30 @@ function storeRecord(req, res) {
   res.end();
 }
 
-function displayRecords(res) {
+function displayRecords(req, res) {
+	// Parse GET Query
+	var query = url.parse(req.url, true).query;
 
+	// GET Query no-cache settings
   res.writeHead(200, {
   'Content-Type': 'text/html',
+	'Cache-Control': 'no-cache, no-store, must-revalidate',
+	'Pragma': 'no-cache'
   });
-  res.write(JSON.stringify(allRecords));
+
+	var html = '';
+	// Detect user-agent from headers
+	var userAgent = req.headers['user-agent'];
+
+	if(userAgent.indexOf("Chrome") > -1)
+		html += '<HTML><HEAD><TITLE>VIEW CODER DETAILS</TITLE></HEAD><BODY bgcolor=pink>';
+	else
+	 	html += '<HTML><HEAD><TITLE>VIEW CODER DETAILS</TITLE></HEAD><BODY>';
+
+		for(var i in allRecords)
+			html += (Number(i)+1) + '. '+allRecords[i]['fname'] + ' '+allRecords[i]['lname'] + ' '+allRecords[i]['progLanguages'] + ' '+allRecords[i]['daysOfWeek']+ ' '+allRecords[i]['hairColor']+'</br>';
+		html +=	'</BODY></HTML>';
+
+	res.write(html);
   res.end();
 }
