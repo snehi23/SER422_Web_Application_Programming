@@ -30,8 +30,9 @@ net.createServer(function (sock) {
                 if(totals[d.clientID] == undefined)
                     totals[d.clientID] = Number(d.val);
                 else
-                    totals[d.clientID] = Number(d.val) - Number(totals[d.clientID]);
+                    totals[d.clientID] = Number(totals[d.clientID]) - Number(d.val);
                 total = Number(totals[d.clientID]);
+                console.log(total);
           break;
         case 's':
                 totals[d.clientID] = Number(d.val);
