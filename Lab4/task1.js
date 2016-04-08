@@ -28,7 +28,7 @@ if(req.method == 'POST') {
 
 function showIndexPage(res) {
 
-	fs.readFile('index.html', function(err, data) {
+	fs.readFile('index1.html', function(err, data) {
 
     var status = ['SUCCESS','FAILURE']
 
@@ -54,7 +54,10 @@ function storeRecord(req, res) {
 	req.on('end', function() {
 		data = querystring.parse(allParams);
     allParams = '';
-		allRecords.push(data);
+
+		if(!data['fname'] == '' && !data['lname'] == '')
+			allRecords.push(data);
+
     data = '';
 	});
   res.writeHead(301,
@@ -67,7 +70,6 @@ function displayRecords(req, res) {
 	// Parse GET Query
 	var query = url.parse(req.url, true).query;
 
-	console.log(query);
 	var filteredRecords = filterRecords(query);
 
 	// GET Query no-cache settings
@@ -101,7 +103,7 @@ function filterRecords(query) {
 		return allRecords;
 	}
 	else {
-		
+
 		for(var i in allRecords) {
 
 			var isExist = false;
@@ -109,8 +111,6 @@ function filterRecords(query) {
 			if(query['fname'] == '' || !allRecords[i]['fname'].includes(query['fname']))
 				continue;
 			if(query['lname'] == '' || !allRecords[i]['lname'].includes(query['lname']))
-				continue;
-			if(query['hairColor'] == '' || !(allRecords[i]['hairColor'] == query['hairColor']))
 				continue;
 
 			for(var j in query['progLanguages']) {
@@ -133,6 +133,9 @@ function filterRecords(query) {
 			}
 
 			if(!isExist)
+				continue;
+
+			if(query['hairColor'] == '' || !(allRecords[i]['hairColor'] == query['hairColor']))
 				continue;
 
 			filteredRecords.push(allRecords[i]);
