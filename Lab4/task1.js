@@ -79,6 +79,7 @@ function displayRecords(req, res) {
 	'Pragma': 'no-cache'
   });
 	var html = '';
+
 	// Detect user-agent from headers
 	var userAgent = req.headers['user-agent'];
 
@@ -88,7 +89,7 @@ function displayRecords(req, res) {
 	 	html += '<HTML><HEAD><TITLE>VIEW CODER DETAILS</TITLE></HEAD><BODY>';
 
 		for(var i in filteredRecords)
-			html += (Number(i)+1) + '. '+filteredRecords[i]['fname'] + ' '+filteredRecords[i]['lname'] + ' '+filteredRecords[i]['progLanguages'] + ' '+filteredRecords[i]['daysOfWeek']+ ' '+filteredRecords[i]['hairColor']+'</br>';
+			html += (Number(i)+1) + '. '+filteredRecords[i]['fname'] + ' '+filteredRecords[i]['lname'] + ' '+filteredRecords[i]['progLanguages'].filter(Boolean) + ' '+filteredRecords[i]['daysOfWeek'].filter(Boolean)+ ' '+filteredRecords[i]['hairColor']+'</br>';
 		html +=	'</BODY></HTML>';
 
 	res.write(html);
