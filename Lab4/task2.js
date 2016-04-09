@@ -26,6 +26,11 @@ app.get('/coders', function (req, res) {
   displayRecords(req, res);
 });
 
+app.get('/error', function (req, res) {
+  res.status(400);
+  res.send("This is a bad request.");
+});
+
 router.get('/firstname/:name', function(req, res) {
   var color = '';
 
@@ -37,6 +42,12 @@ router.get('/firstname/:name', function(req, res) {
     color = '';
 
   var filteredRecords = filterRecordsByFirstName(req.params.name);
+
+  res.status(200);
+
+  res.set({'Cache-Control': 'no-cache, no-store, must-revalidate',
+  'Pragma': 'no-cache'
+  });
 
   res.render('displayRecords', {records:filteredRecords,color:color});
 });
@@ -52,6 +63,12 @@ router.get('/lastname/:name', function(req, res) {
     color = '';
 
   var filteredRecords = filterRecordsByLastName(req.params.name);
+
+  res.status(200);
+
+  res.set({'Cache-Control': 'no-cache, no-store, must-revalidate',
+  'Pragma': 'no-cache'
+});
 
   res.render('displayRecords', {records:filteredRecords,color:color});
 });
@@ -85,6 +102,12 @@ function displayRecords(req, res) {
     color = 'pink';
   else
     color = '';
+
+  res.status(200);
+
+  res.set({'Cache-Control': 'no-cache, no-store, must-revalidate',
+	'Pragma': 'no-cache'
+  });
 
   res.render('displayRecords', {records:filteredRecords,color:color});
 
