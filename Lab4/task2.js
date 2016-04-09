@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var ejs = require('ejs');
 var url = require('url');
 var app = express();
+var router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -25,6 +26,37 @@ app.get('/coders', function (req, res) {
   displayRecords(req, res);
 });
 
+router.get('/firstname/:name', function(req, res) {
+  var color = '';
+
+  // Detect user-agent from headers
+  var userAgent = req.headers['user-agent'];
+  if(userAgent.indexOf("Chrome") > -1)
+    color = 'pink';
+  else
+    color = '';
+
+  var filteredRecords = filterRecordsByFirstName(req.params.name);
+
+  res.render('displayRecords', {records:filteredRecords,color:color});
+});
+
+router.get('/lastname/:name', function(req, res) {
+  var color = '';
+
+  // Detect user-agent from headers
+  var userAgent = req.headers['user-agent'];
+  if(userAgent.indexOf("Chrome") > -1)
+    color = 'pink';
+  else
+    color = '';
+
+  var filteredRecords = filterRecordsByLastName(req.params.name);
+
+  res.render('displayRecords', {records:filteredRecords,color:color});
+});
+
+app.use('/get_coder', router);
 
 app.listen(8081);
 
@@ -105,4 +137,24 @@ function filterRecords(query) {
 		}
 	}
 	return filteredRecords;
+}
+
+function filterRecordsByFirstName(firstname) {
+  var filteredRecords = [];
+
+  for(var i in allRecords)
+    	if(allRecords[i]['fname'].includes(firstname))
+        filteredRecords.push(allRecords[i]);
+
+  return filteredRecords;
+}
+
+function filterRecordsByLastName(lastname) {
+  var filteredRecords = [];
+
+  for(var i in allRecords)
+    	if(allRecords[i]['lname'].includes(lastname))
+        filteredRecords.push(allRecords[i]);
+
+  return filteredRecords;
 }
