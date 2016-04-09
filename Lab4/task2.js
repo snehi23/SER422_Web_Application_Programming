@@ -21,7 +21,7 @@ app.post('/post_coder', function (req, res) {
 });
 
 app.get('/coders', function (req, res) {
-  res.render('displayRecords',{records:allRecords});
+  res.render('displayRecords', {records:allRecords});
 });
 
 app.listen(8081);
