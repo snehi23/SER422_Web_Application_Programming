@@ -1,0 +1,12 @@
+<table>
+<% for(var i=0; i < records.length; i++) { %>
+   <tr>
+     <td><%= i+1 %></td>
+     <td><%= records[i].fname %></td>
+     <td><%= records[i].lname %></td>
+     <td><%= records[i].progLanguages %></td>
+     <td><%= records[i].daysOfWeek %></td>
+     <td><%= records[i].hairColor %></td>
+   </tr>
+<% } %>
+</table>
