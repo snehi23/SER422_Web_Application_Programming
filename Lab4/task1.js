@@ -19,9 +19,8 @@ if(req.method == 'GET') {
 }
 
 if(req.method == 'POST') {
-	if(req.url == '/post_coder') {
-		storeRecord(req, res);
-	}
+	if(req.url == '/post_coder')
+			storeRecord(req, res);
 }
 
 }).listen(8081);
@@ -43,6 +42,7 @@ function showIndexPage(res) {
 			'Content-Length': data.length
 		});
 		res.write(data);
+		res.end();
 	});
 }
 
