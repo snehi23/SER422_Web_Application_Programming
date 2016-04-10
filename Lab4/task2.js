@@ -107,20 +107,20 @@ function filterRecords(query) {
 			if(query['lname'] == '' || !allRecords[i]['lname'].includes(query['lname']))
 				continue;
 
-			for(var j in query['progLanguages']) {
-					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'][j]) > -1) {
-							isExist = true;
-							break;
-					}
-			}
+        for(var j in query['progLanguages']) {
+  					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'].filter(Boolean)[j]) > -1) {
+  							isExist = true;
+  							break;
+  					}
+  			}
 
 			if(!isExist)
 				continue;
 
 			isExist  = false;
 
-			for(var j in query['daysOfWeek']) {
-					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'][j]) > -1) {
+      for(var j in query['daysOfWeek']) {
+					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'].filter(Boolean)[j]) > -1) {
 							isExist = true;
 							break;
 					}

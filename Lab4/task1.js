@@ -115,7 +115,7 @@ function filterRecords(query) {
 				continue;
 
 			for(var j in query['progLanguages']) {
-					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'][j]) > -1) {
+					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'].filter(Boolean)[j]) > -1) {
 							isExist = true;
 							break;
 					}
@@ -127,7 +127,7 @@ function filterRecords(query) {
 			isExist  = false;
 
 			for(var j in query['daysOfWeek']) {
-					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'][j]) > -1) {
+					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'].filter(Boolean)[j]) > -1) {
 							isExist = true;
 							break;
 					}
