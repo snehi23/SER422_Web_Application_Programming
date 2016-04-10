@@ -39,7 +39,8 @@ function showIndexPage(res) {
     }
       res.writeHead(200, {
 			'Content-Type': 'text/html',
-			'Content-Length': data.length
+			'Content-Length': data.length,
+			'Cache-Control': 'no-cache'
 		});
 		res.write(data);
 		res.end();
@@ -75,8 +76,7 @@ function displayRecords(req, res) {
 	// GET Query no-cache settings
   res.writeHead(200, {
   'Content-Type': 'text/html',
-	'Cache-Control': 'no-cache, no-store, must-revalidate',
-	'Pragma': 'no-cache'
+	'Cache-Control': 'no-cache'
   });
 	var html = '';
 

@@ -15,6 +15,7 @@ var allRecords = [];
 app.get('/', function (req, res) {
   res.locals.status = null;
   res.locals.count = null;
+  res.set({'Cache-Control': 'no-cache'});
   res.render('index2');
 });
 
@@ -27,50 +28,27 @@ app.get('/coders', function (req, res) {
 });
 
 app.get('/error', function (req, res) {
+  res.set({'Cache-Control': 'no-cache'});
   res.status(400);
   res.send("This is a bad request.");
 });
 
 router.get('/firstname/:name', function(req, res) {
-  var color = '';
-
-  // Detect user-agent from headers
-  var userAgent = req.headers['user-agent'];
-  if(userAgent.indexOf("Chrome") > -1)
-    color = 'pink';
-  else
-    color = '';
 
   var filteredRecords = filterRecordsByFirstName(req.params.name);
 
   res.status(200);
-
-  res.set({'Cache-Control': 'no-cache, no-store, must-revalidate',
-  'Pragma': 'no-cache'
-  });
-
-  res.render('displayRecords', {records:filteredRecords,color:color});
+  res.set({'Cache-Control': 'no-cache'});
+  res.render('displayRecords', {records:filteredRecords,color:''});
 });
 
 router.get('/lastname/:name', function(req, res) {
-  var color = '';
-
-  // Detect user-agent from headers
-  var userAgent = req.headers['user-agent'];
-  if(userAgent.indexOf("Chrome") > -1)
-    color = 'pink';
-  else
-    color = '';
 
   var filteredRecords = filterRecordsByLastName(req.params.name);
 
   res.status(200);
-
-  res.set({'Cache-Control': 'no-cache, no-store, must-revalidate',
-  'Pragma': 'no-cache'
-});
-
-  res.render('displayRecords', {records:filteredRecords,color:color});
+  res.set({'Cache-Control': 'no-cache'});
+  res.render('displayRecords', {records:filteredRecords,color:''});
 });
 
 app.use('/get_coder', router);
@@ -79,7 +57,7 @@ app.listen(8081);
 
 function storeRecord(req, res) {
 
-  var status = ['SUCCESS','FAILURE']
+  var status = ['SUCCESS!!!','FAILURE!!!']
 
   if(!req.body['fname'] == '' && !req.body['lname'] == '')
 	   allRecords.push(req.body);
@@ -105,9 +83,7 @@ function displayRecords(req, res) {
 
   res.status(200);
 
-  res.set({'Cache-Control': 'no-cache, no-store, must-revalidate',
-	'Pragma': 'no-cache'
-  });
+  res.set({'Cache-Control': 'no-cache'});
 
   res.render('displayRecords', {records:filteredRecords,color:color});
 
