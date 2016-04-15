@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Languages</title>
+</head>
+<body>
+
+  <form action="multiform4" method="POST">
+    <% allLang.forEach(function(lang){ %>
+      <% if(selectedLang && selectedLang.indexOf(lang) > -1) { %>
+      <input type = "checkbox" name = "progLanguages" value="<%= lang %>" checked><%= lang %><br>
+      <% } else { %>
+      <input type = "checkbox" name = "progLanguages" value="<%= lang %>"><%= lang %><br>
+      <% } %>
+    <% }); %>
+
+  <input type="submit" value="Next">
+  </form>
+
+</body>

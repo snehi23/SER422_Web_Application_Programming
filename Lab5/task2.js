@@ -3,21 +3,27 @@ var bodyParser = require('body-parser');
 var ejs = require('ejs');
 var url = require('url');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var app = express();
 var router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(session({secret: '1234567890QWERTY'}));
 app.set('view engine','ejs');
 app.set('views', '.');
 
 var allRecords = [];
+var allLang = ["C","JAVA","PYTHON","JAVA SCRIPT","OPA"];
+var allDays = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"];
 
 app.get('/', function (req, res) {
 
-  if(req.cookies.uname)
-    res.render('index', {uname: req.cookies.uname});
+  var uname = req.cookies.uname;
+
+  if(uname)
+    res.render('index', {uname: uname});
   else
     res.render('login');
 
@@ -35,6 +41,40 @@ app.post('/login', function (req, res) {
   res.cookie('uname', fname);
   res.render('index', {uname: fname});
 
+});
+
+app.get('/multiform1', function (req, res) {
+  var fname = req.session.fname;
+
+  res.render('multiform1', {fname: fname});
+});
+
+app.post('/multiform2', function(req, res) {
+  req.session.fname = req.body['fname'];
+  var lname = req.session.lname;
+
+  res.render('multiform2', {lname: lname});
+});
+
+app.post('/multiform3', function(req, res) {
+  req.session.lname = req.body['lname'];
+  var selectedLang = req.session.selectedLang;
+
+  res.render('multiform3', {allLang: allLang, selectedLang: selectedLang});
+});
+
+app.post('/multiform4', function(req, res) {
+  req.session.selectedLang = req.body['progLanguages'];
+  var selectedDays= req.session.selectedDays;
+
+  res.render('multiform4', {allDays: allDays, selectedDays: selectedDays});
+});
+
+app.post('/multiform5', function(req, res) {
+  req.session.selectedDays = req.body['daysOfWeek'];
+  var selectedDays= req.session.selectedDays;
+
+  res.render('index', {uname: req.session.fname});
 });
 
 app.post('/post_coder', function (req, res) {
