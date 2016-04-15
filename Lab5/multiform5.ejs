@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hair Color</title>
+</head>
+<body>
+ Hair Color: <br>
+  <form action="multiform6" method="POST">
+    <select name="hairColor">
+    <option value="">Please select color</option>
+    <% allHairColors.forEach(function(hairColor){ %>
+      <% if(selectedHairColors && selectedHairColors.indexOf(hairColor) > -1) { %>
+      <option selected="selected" value="<%= hairColor %>" /><%= hairColor %></option><br>
+      <% } else { %>
+      <option value="<%= hairColor %>" /><%= hairColor %></option><br>
+      <% } %>
+    <% }); %>
+
+  <input type="submit" value="Next">
+  </form>
+
+  <form action="multiform4" method="POST">
+  <input type="submit" value="Prev">
+  </form>
+
+</body>

@@ -17,6 +17,7 @@ app.set('views', '.');
 var allRecords = [];
 var allLang = ["C","JAVA","PYTHON","JAVA SCRIPT","OPA"];
 var allDays = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"];
+var allHairColors = ["brunette","blonde","black","other"];
 
 app.get('/', function (req, res) {
 
@@ -46,35 +47,71 @@ app.post('/login', function (req, res) {
 app.get('/multiform1', function (req, res) {
   var fname = req.session.fname;
 
+  //console.log('fname in session'+fname);
+  res.render('multiform1', {fname: fname});
+});
+
+app.post('/multiform1', function (req, res) {
+  var fname = req.session.fname;
+
+  //console.log('fname in session'+fname);
   res.render('multiform1', {fname: fname});
 });
 
 app.post('/multiform2', function(req, res) {
-  req.session.fname = req.body['fname'];
+  if(req.body['fname'])
+    req.session.fname = req.body['fname'];
   var lname = req.session.lname;
 
+  //console.log('lname in session'+lname);
   res.render('multiform2', {lname: lname});
 });
 
 app.post('/multiform3', function(req, res) {
-  req.session.lname = req.body['lname'];
+  if(req.body['lname'])
+    req.session.lname = req.body['lname'];
   var selectedLang = req.session.selectedLang;
 
+  //console.log('lang in session'+selectedLang);
   res.render('multiform3', {allLang: allLang, selectedLang: selectedLang});
 });
 
 app.post('/multiform4', function(req, res) {
-  req.session.selectedLang = req.body['progLanguages'];
+  if(req.body['progLanguages'])
+    req.session.selectedLang = req.body['progLanguages'];
   var selectedDays= req.session.selectedDays;
 
+  //console.log('days in session'+selectedDays);
   res.render('multiform4', {allDays: allDays, selectedDays: selectedDays});
 });
 
 app.post('/multiform5', function(req, res) {
-  req.session.selectedDays = req.body['daysOfWeek'];
-  var selectedDays= req.session.selectedDays;
+  if(req.body['daysOfWeek'])
+    req.session.selectedDays = req.body['daysOfWeek'];
+  var selectedHairColors= req.session.selectedHairColors;
 
-  res.render('index', {uname: req.session.fname});
+  //console.log('hairs in session'+selectedHairColors);
+  res.render('multiform5', {allHairColors: allHairColors, selectedHairColors: selectedHairColors});
+});
+
+app.post('/multiform6', function(req, res) {
+  if(req.body['hairColor'])
+    req.session.selectedHairColors = req.body['hairColor'];
+  var fname = req.session.fname;
+  var lname = req.session.lname;
+  var selectedLang = req.session.selectedLang;
+  var selectedDays= req.session.selectedDays;
+  var selectedHairColors= req.session.selectedHairColors;
+
+  res.render('multiform6', {fname: fname ,lname: lname, selectedLang: selectedLang, selectedDays: selectedDays, selectedHairColors: selectedHairColors});
+});
+
+app.post('/remove', function (req, res) {
+
+  req.session.destroy();
+
+  var uname = req.cookies.uname;
+  res.render('index', {uname: uname});
 });
 
 app.post('/post_coder', function (req, res) {
@@ -115,14 +152,19 @@ app.listen(8081);
 
 function storeRecord(req, res) {
 
-  var status = ['SUCCESS!!!','FAILURE!!!']
+  var fname = req.session.fname;
+  var lname = req.session.lname;
+  var progLanguages = req.session.selectedLang;
+  var daysOfWeek= req.session.selectedDays;
+  var hairColor= req.session.selectedHairColors;
 
-  if(!req.body['fname'] == '' && !req.body['lname'] == '')
-	   allRecords.push(req.body);
+  if(!fname == '' && !lname == '')
+	   allRecords.push({fname: fname ,lname: lname, progLanguages: progLanguages, daysOfWeek: daysOfWeek, hairColor: hairColor});
 
-  res.render('index2', {status:status[0],count:allRecords.length+' USER ADDED'});
+  req.session.destroy();
 
-  res.end();
+  var uname = req.cookies.uname;
+  res.render('index', {uname: uname});
 }
 
 function displayRecords(req, res) {
