@@ -8,8 +8,11 @@
 <body>
 Hello <%= uname %> !!! &nbsp; &nbsp; &nbsp;
 Not <%= uname %> Please login  <a href="/login"> here </a></br>
-Access Muiltiform <a href="/multiform1"> here </a>
+Access Multiform <a href="/multiform1"> here </a>
 </br>
+</br>
+</br>
+<% if(records.length != 0) { %>
 You top 3 search results:</br>
 <div>
   <table>
@@ -25,5 +28,9 @@ You top 3 search results:</br>
   <% } %>
   </table>
 </div>
+<%} else {%>
+Preferences for logged in user not found!!! </br>
+Please add preferences for current logged in user OR log in with correct user
+<% }%>
 </body>
 </html>

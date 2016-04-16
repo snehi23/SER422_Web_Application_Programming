@@ -25,6 +25,7 @@ app.get('/', function (req, res) {
   if(uname) {
     var records = [];
     records = findMyPreferences(uname);
+    console.log(records);
     res.render('index', {uname: uname, records: records});
   }
   else
@@ -40,9 +41,12 @@ app.post('/login', function (req, res) {
 
   var fname = req.body['fname'];
   var lname = req.body['lname'];
+  var records = [];
 
   res.cookie('uname', fname);
-  res.render('index', {uname: fname});
+  records = findMyPreferences(fname);
+  console.log(records);
+  res.render('index', {uname: fname, records: records});
 
 });
 
@@ -93,6 +97,8 @@ app.post('/multiform5', function(req, res) {
 app.post('/multiform6', function(req, res) {
   if(req.body['hairColor'])
     req.session.selectedHairColors = req.body['hairColor'];
+
+  // collect session values
   var fname = req.session.fname;
   var lname = req.session.lname;
   var selectedLang = req.session.selectedLang;
@@ -110,15 +116,12 @@ app.post('/remove', function (req, res) {
   var records = [];
 
   records = findMyPreferences(uname);
+  console.log(records);
   res.render('index', {uname: uname, records: records});
 });
 
 app.post('/post_coder', function (req, res) {
   storeRecord(req, res);
-});
-
-app.get('/coders', function (req, res) {
-  displayRecords(req, res);
 });
 
 app.get('/error', function (req, res) {
@@ -131,6 +134,7 @@ app.listen(8081);
 
 function storeRecord(req, res) {
 
+  // collect session values
   var fname = req.session.fname;
   var lname = req.session.lname;
   var progLanguages = req.session.selectedLang;
@@ -146,6 +150,7 @@ function storeRecord(req, res) {
   var records = [];
 
   records = findMyPreferences(uname);
+  console.log(records);
   res.render('index', {uname: uname, records: records});
 }
 
@@ -174,6 +179,9 @@ function findMyPreferences(uname) {
             count += 1;
       });
 
+      if(myQuery['hairColor'] == record['hairColor'])
+        count += 1;
+
       recordCountMap.push({record: record, count: count})
 
     });
@@ -186,82 +194,11 @@ function findMyPreferences(uname) {
       return entry.record;
     });
 
-    return records;
+    return records.slice(0,3);
 
   } else {
-    return allRecords;
+    return [];
   }
 
 
-}
-
-function displayRecords(req, res) {
-
-  var query = url.parse(req.url, true).query;
-  var color = '';
-
-  var filteredRecords = filterRecords(query);
-
-  // Detect user-agent from headers
-  var userAgent = req.headers['user-agent'];
-  if(userAgent.indexOf("Chrome") > -1)
-    color = 'pink';
-  else
-    color = '';
-
-  res.status(200);
-
-  res.set({'Cache-Control': 'no-cache'});
-
-  res.render('displayRecords', {records:filteredRecords,color:color});
-
-}
-
-function filterRecords(query) {
-
-	var filteredRecords = [];
-
-	if(Object.keys(query).length == 0 || (query['fname'] == '' && query['lname'] == '' && query['progLanguages'] == '' && query['daysOfWeek'] == '' && query['hairColor'] == '')) {
-		return allRecords;
-	}
-	else {
-
-		for(var i in allRecords) {
-
-			var isExist = false;
-
-			if(query['fname'] == '' || !allRecords[i]['fname'].includes(query['fname']))
-				continue;
-			if(query['lname'] == '' || !allRecords[i]['lname'].includes(query['lname']))
-				continue;
-
-        for(var j in query['progLanguages']) {
-  					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'].filter(Boolean)[j]) > -1) {
-  							isExist = true;
-  							break;
-  					}
-  			}
-
-			if(!isExist)
-				continue;
-
-			isExist  = false;
-
-      for(var j in query['daysOfWeek']) {
-					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'].filter(Boolean)[j]) > -1) {
-							isExist = true;
-							break;
-					}
-			}
-
-			if(!isExist)
-				continue;
-
-			if(query['hairColor'] == '' || !(allRecords[i]['hairColor'] == query['hairColor']))
-				continue;
-
-			filteredRecords.push(allRecords[i]);
-		}
-	}
-	return filteredRecords;
 }
