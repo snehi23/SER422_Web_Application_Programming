@@ -169,15 +169,25 @@ function findMyPreferences(uname) {
   if(myQuery) {
     allRecords.forEach(function(record) {
       count = 0;
-      myQuery['progLanguages'].forEach(function(lang){
-          if(record['progLanguages'].indexOf(lang) > -1)
-            count += 1;
-      });
+      if(Array.isArray(myQuery['progLanguages'])) {
+        myQuery['progLanguages'].forEach(function(lang){
+            if(record['progLanguages'].indexOf(lang) > -1)
+              count += 1;
+        });
+      } else {
+        if(record['progLanguages'].indexOf(myQuery['progLanguages']) > -1)
+          count += 1;
+      }
 
-      myQuery['daysOfWeek'].forEach(function(day){
-          if(record['daysOfWeek'].indexOf(day) > -1)
-            count += 1;
-      });
+      if(Array.isArray(myQuery['daysOfWeek'])) {
+        myQuery['daysOfWeek'].forEach(function(day){
+            if(record['daysOfWeek'].indexOf(day) > -1)
+              count += 1;
+        });
+      } else {
+        if(record['daysOfWeek'].indexOf(myQuery['daysOfWeek']) > -1)
+          count += 1;
+      }
 
       if(myQuery['hairColor'] == record['hairColor'])
         count += 1;
