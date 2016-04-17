@@ -11,17 +11,15 @@
     <option value="">Please select color</option>
     <% allHairColors.forEach(function(hairColor){ %>
       <% if(selectedHairColors && selectedHairColors.indexOf(hairColor) > -1) { %>
-      <option selected="selected" value="<%= hairColor %>" /><%= hairColor %></option><br>
+      <option selected="selected" value="<%= hairColor %>" /><%= hairColor %></option>
       <% } else { %>
-      <option value="<%= hairColor %>" /><%= hairColor %></option><br>
+      <option value="<%= hairColor %>" /><%= hairColor %></option>
       <% } %>
     <% }); %>
+  </br>
+  <input type="submit" value="Prev" formaction="multiform4">
+  <input type="submit" value="Next" formaction="multiform6">
 
-  <input type="submit" value="Next">
-  </form>
-
-  <form action="multiform4" method="POST">
-  <input type="submit" value="Prev">
   </form>
 
 </body>
