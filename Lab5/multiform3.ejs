@@ -5,7 +5,7 @@
 <title>Languages</title>
 </head>
 <body>
-
+Known Programming Languages: <br>
   <form action="multiform4" method="POST">
     <% allLang.forEach(function(lang){ %>
       <% if(selectedLang && selectedLang.indexOf(lang) > -1) { %>
@@ -14,7 +14,7 @@
       <input type = "checkbox" name = "progLanguages" value="<%= lang %>"><%= lang %><br>
       <% } %>
     <% }); %>
-  <input type="submit" value="Prev" formaction="multiform2">  
+  <input type="submit" value="Prev" formaction="multiform2">
   <input type="submit" value="Next" formaction="multiform4">
   </form>
 

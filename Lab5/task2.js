@@ -25,7 +25,6 @@ app.get('/', function (req, res) {
   if(uname) {
     var records = [];
     records = findMyPreferences(uname);
-    console.log(records);
     res.render('index', {uname: uname, records: records});
   }
   else
@@ -45,7 +44,6 @@ app.post('/login', function (req, res) {
 
   res.cookie('uname', fname);
   records = findMyPreferences(fname);
-  console.log(records);
   res.render('index', {uname: fname, records: records});
 
 });
@@ -116,7 +114,6 @@ app.post('/remove', function (req, res) {
   var records = [];
 
   records = findMyPreferences(uname);
-  console.log(records);
   res.render('index', {uname: uname, records: records});
 });
 
@@ -124,10 +121,28 @@ app.post('/post_coder', function (req, res) {
   storeRecord(req, res);
 });
 
-app.get('/error', function (req, res) {
-  res.set({'Cache-Control': 'no-cache'});
-  res.status(400);
-  res.send("This is a bad request.");
+app.use(function(err, req, res, next) {
+
+  var errorCode = err.status || 500;
+  var errorMessage = '';
+
+  switch(err.status) {
+    case 400:
+      errorMessage = 'This is Bad Request';
+      break;
+    case 404:
+      errorMessage = 'Resource Not Found';
+      break;
+    case 500:
+      errorMessage = 'Internal Server Error';
+}
+
+  res.status(errorCode);
+
+     res.render('error', {
+         code : errorCode,
+         message: errorMessage
+     });
 });
 
 app.listen(8081);
@@ -141,8 +156,25 @@ function storeRecord(req, res) {
   var daysOfWeek= req.session.selectedDays;
   var hairColor= req.session.selectedHairColors;
 
-  if(!fname == '' && !lname == '')
-	   allRecords.push({fname: fname ,lname: lname, progLanguages: progLanguages, daysOfWeek: daysOfWeek, hairColor: hairColor});
+  var entryExist = false;
+
+  if(!fname == '' && !lname == '') {
+
+    allRecords.forEach(function(record) {
+
+      if(fname == record['fname'] && lname == record['lname']) {
+          entryExist = true;
+          record['progLanguages'] = progLanguages;
+          record['daysOfWeek'] = daysOfWeek;
+          record['hairColor'] = hairColor;
+      }
+
+    });
+
+    if(!entryExist)
+    allRecords.push({fname: fname ,lname: lname, progLanguages: progLanguages, daysOfWeek: daysOfWeek, hairColor: hairColor});
+
+  }
 
   req.session.destroy();
 
@@ -150,7 +182,6 @@ function storeRecord(req, res) {
   var records = [];
 
   records = findMyPreferences(uname);
-  console.log(records);
   res.render('index', {uname: uname, records: records});
 }
 
