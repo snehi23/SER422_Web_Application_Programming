@@ -9,6 +9,7 @@ var express = require('express'),
     developer = require('./model/developers');
 
 var app = express();
+var router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -68,6 +69,7 @@ app.post('/multiform2', function(req, res) {
   var lname = req.session.lname;
 
   res.render('multiform2', {lname: lname});
+
 });
 
 app.post('/multiform3', function(req, res) {
@@ -122,6 +124,24 @@ app.post('/post_coder', function (req, res) {
   storeRecord(req, res);
 });
 
+app.get('/search', function (req, res) {
+  res.render('search');
+});
+
+app.get('/coders', function (req, res) {
+  displayRecords(req, res);
+});
+
+router.get('/firstname/:name', function(req, res) {
+  filterRecordsByFirstName(res, req.params.name);
+});
+
+router.get('/lastname/:name', function(req, res) {
+  filterRecordsByLastName(res, req.params.name);
+});
+
+app.use('/get_coder', router);
+
 app.use(function(err, req, res, next) {
 
   var errorCode = err.status || 500;
@@ -134,8 +154,12 @@ app.use(function(err, req, res, next) {
     case 404:
       errorMessage = 'Resource Not Found';
       break;
+    case 405:
+      errorMessage = 'Method not allowed';
+      break;
     case 500:
       errorMessage = 'Internal Server Error';
+      break;
 }
 
   res.status(errorCode);
@@ -160,28 +184,29 @@ function storeRecord(req, res) {
   var query = {fname: fname, lname: lname};
 
   var newData = {
-  fname: fname,
-  lname: lname,
-  progLanguages: progLanguages,
-  daysOfWeek: daysOfWeek,
-  hairColor: hairColor};
+    fname: fname,
+    lname: lname,
+    progLanguages: progLanguages,
+    daysOfWeek: daysOfWeek,
+    hairColor: hairColor
+  };
 
   mongoose.model('Developer').findOneAndUpdate(query, newData, {upsert: true},function(err, record) {
     if(err)
       next(err);
   });
 
-    req.session.destroy();
+  req.session.destroy();
 
-    var uname = req.cookies.uname;
-    var records = [];
+  var uname = req.cookies.uname;
+  var records = [];
 
-    showPreferences(res, uname);
+  showPreferences(res, uname);
 }
 
 function showPreferences(res, uname) {
 
-  var filterRecordsByPreferences = function(err, allRecords) {
+    var filterRecordsByPreferences = function(err, allRecords) {
 
     var myQuery;
     var preferenceList = [];
@@ -243,4 +268,113 @@ function showPreferences(res, uname) {
 
   mongoose.model('Developer').find({}, filterRecordsByPreferences);
 
+}
+
+function displayRecords(req, res) {
+
+  var recordList = function(err, allRecords) {
+    var query = url.parse(req.url, true).query;
+    var color = '';
+
+    var filteredRecords = filterRecords(allRecords, query);
+
+    // Detect user-agent from headers
+    var userAgent = req.headers['user-agent'];
+    if(userAgent.indexOf("Chrome") > -1)
+      color = 'pink';
+    else
+      color = '';
+
+  res.status(200);
+  res.set({'Cache-Control': 'no-cache'});
+  res.render('display', {records:filteredRecords,color:color});
+
+  }
+  mongoose.model('Developer').find({}, recordList);
+
+}
+
+function filterRecords(allRecords, query) {
+
+	var filteredRecords = [];
+
+	if(Object.keys(query).length == 0 || (query['fname'] == '' && query['lname'] == '' && query['progLanguages'] == '' && query['daysOfWeek'] == '' && query['hairColor'] == '')) {
+		return allRecords;
+	}
+	else {
+
+		for(var i in allRecords) {
+
+			var isExist = false;
+
+			if(query['fname'] == '' || !allRecords[i]['fname'].includes(query['fname']))
+				continue;
+			if(query['lname'] == '' || !allRecords[i]['lname'].includes(query['lname']))
+				continue;
+
+        for(var j in query['progLanguages']) {
+  					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'].filter(Boolean)[j]) > -1) {
+  							isExist = true;
+  							break;
+  					}
+  			}
+
+			if(!isExist)
+				continue;
+
+			isExist  = false;
+
+      for(var j in query['daysOfWeek']) {
+					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'].filter(Boolean)[j]) > -1) {
+							isExist = true;
+							break;
+					}
+			}
+
+			if(!isExist)
+				continue;
+
+			if(query['hairColor'] == '' || !(allRecords[i]['hairColor'] == query['hairColor']))
+				continue;
+
+			filteredRecords.push(allRecords[i]);
+		}
+	}
+	return filteredRecords;
+}
+
+function filterRecordsByFirstName(res, firstname) {
+
+  var recordList = function(err, allRecords) {
+
+  var filteredRecords = [];
+
+  for(var i in allRecords)
+    	if(allRecords[i]['fname'].includes(firstname))
+        filteredRecords.push(allRecords[i]);
+
+      res.status(200);
+      res.set({'Cache-Control': 'no-cache'});
+      res.render('display', {records:filteredRecords,color:''});
+
+  }
+  mongoose.model('Developer').find({}, recordList);
+}
+
+function filterRecordsByLastName(res, lastname) {
+
+  var recordList = function(err, allRecords) {
+
+  var filteredRecords = [];
+
+  for(var i in allRecords)
+    	if(allRecords[i]['fname'].includes(lastname))
+        filteredRecords.push(allRecords[i]);
+
+      res.status(200);
+      res.set({'Cache-Control': 'no-cache'});
+      res.render('display', {records:filteredRecords,color:''});
+
+  }
+  mongoose.model('Developer').find({}, recordList);
 }

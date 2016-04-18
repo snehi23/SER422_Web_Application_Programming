@@ -5,6 +5,7 @@ var url = require('url');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var app = express();
+var router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -121,6 +122,34 @@ app.post('/post_coder', function (req, res) {
   storeRecord(req, res);
 });
 
+app.get('/search', function (req, res) {
+  res.render('search');
+});
+
+app.get('/coders', function (req, res) {
+  displayRecords(req, res);
+});
+
+router.get('/firstname/:name', function(req, res) {
+
+  var filteredRecords = filterRecordsByFirstName(req.params.name);
+
+  res.status(200);
+  res.set({'Cache-Control': 'no-cache'});
+  res.render('display', {records:filteredRecords,color:''});
+});
+
+router.get('/lastname/:name', function(req, res) {
+
+  var filteredRecords = filterRecordsByLastName(req.params.name);
+
+  res.status(200);
+  res.set({'Cache-Control': 'no-cache'});
+  res.render('display', {records:filteredRecords,color:''});
+});
+
+app.use('/get_coder', router);
+
 app.use(function(err, req, res, next) {
 
   var errorCode = err.status || 500;
@@ -146,6 +175,75 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(8081);
+
+function displayRecords(req, res) {
+
+  var query = url.parse(req.url, true).query;
+  var color = '';
+
+  var filteredRecords = filterRecords(query);
+
+  // Detect user-agent from headers
+  var userAgent = req.headers['user-agent'];
+  if(userAgent.indexOf("Chrome") > -1)
+    color = 'pink';
+  else
+    color = '';
+
+  res.status(200);
+  res.set({'Cache-Control': 'no-cache'});
+  res.render('display', {records:filteredRecords,color:color});
+
+}
+
+function filterRecords(query) {
+
+	var filteredRecords = [];
+
+	if(Object.keys(query).length == 0 || (query['fname'] == '' && query['lname'] == '' && query['progLanguages'] == '' && query['daysOfWeek'] == '' && query['hairColor'] == '')) {
+		return allRecords;
+	}
+	else {
+
+		for(var i in allRecords) {
+
+			var isExist = false;
+
+			if(query['fname'] == '' || !allRecords[i]['fname'].includes(query['fname']))
+				continue;
+			if(query['lname'] == '' || !allRecords[i]['lname'].includes(query['lname']))
+				continue;
+
+        for(var j in query['progLanguages']) {
+  					if(allRecords[i]['progLanguages'].indexOf(query['progLanguages'].filter(Boolean)[j]) > -1) {
+  							isExist = true;
+  							break;
+  					}
+  			}
+
+			if(!isExist)
+				continue;
+
+			isExist  = false;
+
+      for(var j in query['daysOfWeek']) {
+					if(allRecords[i]['daysOfWeek'].indexOf(query['daysOfWeek'].filter(Boolean)[j]) > -1) {
+							isExist = true;
+							break;
+					}
+			}
+
+			if(!isExist)
+				continue;
+
+			if(query['hairColor'] == '' || !(allRecords[i]['hairColor'] == query['hairColor']))
+				continue;
+
+			filteredRecords.push(allRecords[i]);
+		}
+	}
+	return filteredRecords;
+}
 
 function storeRecord(req, res) {
 
@@ -241,5 +339,24 @@ function findMyPreferences(uname) {
     return [];
   }
 
+}
 
+function filterRecordsByFirstName(firstname) {
+  var filteredRecords = [];
+
+  for(var i in allRecords)
+    	if(allRecords[i]['fname'].includes(firstname))
+        filteredRecords.push(allRecords[i]);
+
+  return filteredRecords;
+}
+
+function filterRecordsByLastName(lastname) {
+  var filteredRecords = [];
+
+  for(var i in allRecords)
+    	if(allRecords[i]['lname'].includes(lastname))
+        filteredRecords.push(allRecords[i]);
+
+  return filteredRecords;
 }
