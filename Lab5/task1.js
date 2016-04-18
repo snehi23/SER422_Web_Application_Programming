@@ -135,7 +135,7 @@ app.use(function(err, req, res, next) {
       break;
     case 500:
       errorMessage = 'Internal Server Error';
-  }   
+  }
 
   res.status(errorCode);
 

@@ -5,7 +5,6 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     mongoose = require('mongoose'),
-
     mongodb = require('./model/mongodb'),
     developer = require('./model/developers');
 
@@ -47,7 +46,7 @@ app.post('/login', function (req, res) {
   var records = [];
 
   res.cookie('uname', fname);
-  showPreferences(res, uname);
+  showPreferences(res, fname);
 
 });
 
@@ -123,29 +122,29 @@ app.post('/post_coder', function (req, res) {
   storeRecord(req, res);
 });
 
-app.use(function(err, req, res, next) {
-
-  var errorCode = err.status || 500;
-  var errorMessage = '';
-
-  switch(errorCode) {
-    case 400:
-      errorMessage = 'This is Bad Request';
-      break;
-    case 404:
-      errorMessage = 'Resource Not Found';
-      break;
-    case 500:
-      errorMessage = 'Internal Server Error';
-}
-
-  res.status(errorCode);
-
-     res.render('error', {
-         code : errorCode,
-         message: errorMessage
-     });
-});
+// app.use(function(err, req, res, next) {
+//
+//   var errorCode = err.status || 500;
+//   var errorMessage = '';
+//
+//   switch(errorCode) {
+//     case 400:
+//       errorMessage = 'This is Bad Request';
+//       break;
+//     case 404:
+//       errorMessage = 'Resource Not Found';
+//       break;
+//     case 500:
+//       errorMessage = 'Internal Server Error';
+// }
+//
+//   res.status(errorCode);
+//
+//      res.render('error', {
+//          code : errorCode,
+//          message: errorMessage
+//      });
+// });
 
 app.listen(8081);
 
@@ -158,22 +157,26 @@ function storeRecord(req, res) {
   var daysOfWeek= req.session.selectedDays;
   var hairColor= req.session.selectedHairColors;
 
-  mongoose.model('Developer').create({
+  var query = {fname: fname, lname: lname};
+
+  var newData = {
   fname: fname,
   lname: lname,
   progLanguages: progLanguages,
   daysOfWeek: daysOfWeek,
-  hairColor: hairColor}, function(err, record) {
+  hairColor: hairColor};
+
+  mongoose.model('Developer').findOneAndUpdate(query, newData, {upsert: true},function(err, record) {
     if(err)
       next(err);
   });
 
-  req.session.destroy();
+    req.session.destroy();
 
-  var uname = req.cookies.uname;
-  var records = [];
+    var uname = req.cookies.uname;
+    var records = [];
 
-  showPreferences(res, uname);
+    showPreferences(res, uname);
 }
 
 function showPreferences(res, uname) {
