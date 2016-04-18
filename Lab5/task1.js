@@ -1,14 +1,9 @@
-var express = require('express'),
-    bodyParser = require('body-parser'),
-    ejs = require('ejs'),
-    url = require('url'),
-    cookieParser = require('cookie-parser'),
-    session = require('express-session'),
-    mongoose = require('mongoose'),
-
-    mongodb = require('./model/mongodb'),
-    developer = require('./model/developers');
-
+var express = require('express');
+var bodyParser = require('body-parser');
+var ejs = require('ejs');
+var url = require('url');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,7 +24,8 @@ app.get('/', function (req, res) {
 
   if(uname) {
     var records = [];
-    showPreferences(res, uname);
+    records = findMyPreferences(uname);
+    res.render('index', {uname: uname, records: records});
   }
   else
     res.render('login');
@@ -47,7 +43,8 @@ app.post('/login', function (req, res) {
   var records = [];
 
   res.cookie('uname', fname);
-  showPreferences(res, uname);
+  records = findMyPreferences(fname);
+  res.render('index', {uname: fname, records: records});
 
 });
 
@@ -116,7 +113,8 @@ app.post('/remove', function (req, res) {
   var uname = req.cookies.uname;
   var records = [];
 
-  showPreferences(res, uname);
+  records = findMyPreferences(uname);
+  res.render('index', {uname: uname, records: records});
 });
 
 app.post('/post_coder', function (req, res) {
@@ -137,7 +135,7 @@ app.use(function(err, req, res, next) {
       break;
     case 500:
       errorMessage = 'Internal Server Error';
-}
+  }   
 
   res.status(errorCode);
 
@@ -158,86 +156,90 @@ function storeRecord(req, res) {
   var daysOfWeek= req.session.selectedDays;
   var hairColor= req.session.selectedHairColors;
 
-  mongoose.model('Developer').create({
-  fname: fname,
-  lname: lname,
-  progLanguages: progLanguages,
-  daysOfWeek: daysOfWeek,
-  hairColor: hairColor}, function(err, record) {
-    if(err)
-      next(err);
-  });
+  var entryExist = false;
+
+  if(!fname == '' && !lname == '') {
+
+    allRecords.forEach(function(record) {
+
+      if(fname == record['fname'] && lname == record['lname']) {
+          entryExist = true;
+          record['progLanguages'] = progLanguages;
+          record['daysOfWeek'] = daysOfWeek;
+          record['hairColor'] = hairColor;
+      }
+
+    });
+
+    if(!entryExist)
+    allRecords.push({fname: fname ,lname: lname, progLanguages: progLanguages, daysOfWeek: daysOfWeek, hairColor: hairColor});
+
+  }
 
   req.session.destroy();
 
   var uname = req.cookies.uname;
   var records = [];
 
-  showPreferences(res, uname);
+  records = findMyPreferences(uname);
+  res.render('index', {uname: uname, records: records});
 }
 
-function showPreferences(res, uname) {
+function findMyPreferences(uname) {
 
-  var filterRecordsByPreferences = function(err, allRecords) {
+  var myQuery;
+  var preferenceList = [];
+  var recordCountMap = [];
+  var count = 0;
 
-    var myQuery;
-    var preferenceList = [];
-    var recordCountMap = [];
-    var count = 0;
-
-    allRecords.forEach(function(record){
-      if(record['fname'] == uname) {
+  allRecords.forEach(function(record) {
+     if(record['fname'] == uname)
         myQuery = record;
+  });
+
+  if(myQuery) {
+    allRecords.forEach(function(record) {
+      count = 0;
+      if(Array.isArray(myQuery['progLanguages'])) {
+        myQuery['progLanguages'].forEach(function(lang){
+            if(record['progLanguages'].indexOf(lang) > -1)
+              count += 1;
+        });
+      } else {
+        if(record['progLanguages'].indexOf(myQuery['progLanguages']) > -1)
+          count += 1;
       }
+
+      if(Array.isArray(myQuery['daysOfWeek'])) {
+        myQuery['daysOfWeek'].forEach(function(day){
+            if(record['daysOfWeek'].indexOf(day) > -1)
+              count += 1;
+        });
+      } else {
+        if(record['daysOfWeek'].indexOf(myQuery['daysOfWeek']) > -1)
+          count += 1;
+      }
+
+      if(myQuery['hairColor'] == record['hairColor'])
+        count += 1;
+
+      recordCountMap.push({record: record, count: count})
 
     });
 
-    if(myQuery) {
-      allRecords.forEach(function(record) {
-        count = 0;
-        if(Array.isArray(myQuery['progLanguages'])) {
-          myQuery['progLanguages'].forEach(function(lang){
-              if(record['progLanguages'].indexOf(lang) > -1)
-                count += 1;
-          });
-        } else {
-          if(record['progLanguages'].indexOf(myQuery['progLanguages']) > -1)
-            count += 1;
-        }
+    recordCountMap.sort(function (rd1, rd2) {
+      return rd2.count - rd1.count;
+    });
 
-        if(Array.isArray(myQuery['daysOfWeek'])) {
-          myQuery['daysOfWeek'].forEach(function(day){
-              if(record['daysOfWeek'].indexOf(day) > -1)
-                count += 1;
-          });
-        } else {
-          if(record['daysOfWeek'].indexOf(myQuery['daysOfWeek']) > -1)
-            count += 1;
-        }
+    var records = recordCountMap.map(function (entry) {
+      return entry.record;
+    });
 
-        if(myQuery['hairColor'] == record['hairColor'])
-          count += 1;
+    return records.slice(0,3);
 
-        recordCountMap.push({record: record, count: count})
-
-      });
-
-      recordCountMap.sort(function (rd1, rd2) {
-        return rd2.count - rd1.count;
-      });
-
-      var records = recordCountMap.map(function (entry) {
-        return entry.record;
-      });
-
-      res.render('index', {uname: uname, records: records.slice(0,3)});
-
-    } else {
-      var records = [];
-      res.render('index', {uname: uname, records: records});
-    }
+  } else {
+    return [];
   }
 
-  mongoose.model('Developer').find({}, filterRecordsByPreferences);
 
 }
