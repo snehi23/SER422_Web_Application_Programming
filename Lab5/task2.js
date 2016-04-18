@@ -122,29 +122,29 @@ app.post('/post_coder', function (req, res) {
   storeRecord(req, res);
 });
 
-// app.use(function(err, req, res, next) {
-//
-//   var errorCode = err.status || 500;
-//   var errorMessage = '';
-//
-//   switch(errorCode) {
-//     case 400:
-//       errorMessage = 'This is Bad Request';
-//       break;
-//     case 404:
-//       errorMessage = 'Resource Not Found';
-//       break;
-//     case 500:
-//       errorMessage = 'Internal Server Error';
-// }
-//
-//   res.status(errorCode);
-//
-//      res.render('error', {
-//          code : errorCode,
-//          message: errorMessage
-//      });
-// });
+app.use(function(err, req, res, next) {
+
+  var errorCode = err.status || 500;
+  var errorMessage = '';
+
+  switch(errorCode) {
+    case 400:
+      errorMessage = 'This is Bad Request';
+      break;
+    case 404:
+      errorMessage = 'Resource Not Found';
+      break;
+    case 500:
+      errorMessage = 'Internal Server Error';
+}
+
+  res.status(errorCode);
+
+     res.render('error', {
+         code : errorCode,
+         message: errorMessage
+     });
+});
 
 app.listen(8081);
 
