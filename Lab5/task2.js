@@ -18,7 +18,6 @@ app.use(session({secret: '1234567890QWERTY'}));
 app.set('view engine','ejs');
 app.set('views', '.');
 
-var allRecords = [];
 var allLang = ["C","JAVA","PYTHON","JAVA SCRIPT","OPA"];
 var allDays = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"];
 var allHairColors = ["brunette","blonde","black","other"];

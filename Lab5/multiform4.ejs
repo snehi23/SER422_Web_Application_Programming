@@ -5,8 +5,9 @@
 <title>Days Of Week</title>
 </head>
 <body>
-Available Days of Week: <br>
+
   <form action="multiform5" method="POST">
+    Available Days of Week: <br>
     <% allDays.forEach(function(day){ %>
       <% if(selectedDays && selectedDays.indexOf(day) > -1) { %>
       <input type = "checkbox" name = "daysOfWeek" value="<%= day %>" checked><%= day %><br>
