@@ -1,0 +1,31 @@
+{
+  "name": "Web-Apps-Lab5",
+  "version": "0.1.0",
+  "contributors": [
+    {
+      "name": "Snehal Shendware",
+      "email": "snehalshendware1@gmail.com"
+    }
+  ],
+  "description": "Stateful Multiform MVC",
+  "main": "/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snehi23/SER422_Web_Application_Programming.git"
+  },
+  "author": "Snehal Shendware",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "express": "^4.13.4",
+    "ejs": "^2.4.1",
+    "express-session": "^1.13.0",
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
+    "mongoose": "^4.4.12"
+  },
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=3.0.0"
+  }
+}
