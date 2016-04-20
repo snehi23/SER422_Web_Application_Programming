@@ -345,36 +345,24 @@ function filterRecords(allRecords, query) {
 
 function filterRecordsByFirstName(res, firstname) {
 
-  var recordList = function(err, allRecords) {
-
-  var filteredRecords = [];
-
-  for(var i in allRecords)
-    	if(allRecords[i]['fname'].includes(firstname))
-        filteredRecords.push(allRecords[i]);
+  var recordList = function(err, filteredRecords) {
 
       res.status(200);
       res.set({'Cache-Control': 'no-cache'});
       res.render('display', {records:filteredRecords,color:''});
 
   }
-  mongoose.model('Developer').find({}, recordList);
+  mongoose.model('Developer').find({fname: new RegExp(firstname)}, recordList);
 }
 
 function filterRecordsByLastName(res, lastname) {
 
-  var recordList = function(err, allRecords) {
-
-  var filteredRecords = [];
-
-  for(var i in allRecords)
-    	if(allRecords[i]['fname'].includes(lastname))
-        filteredRecords.push(allRecords[i]);
+  var recordList = function(err, filteredRecords) {
 
       res.status(200);
       res.set({'Cache-Control': 'no-cache'});
       res.render('display', {records:filteredRecords,color:''});
 
   }
-  mongoose.model('Developer').find({}, recordList);
+  mongoose.model('Developer').find({lname: new RegExp(lastname)}, recordList);
 }
