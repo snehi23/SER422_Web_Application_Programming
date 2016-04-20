@@ -155,7 +155,7 @@ app.use(function(err, req, res, next) {
       errorMessage = 'Resource Not Found';
       break;
     case 405:
-      errorMessage = 'Method not allowed';
+      errorMessage = 'Method not Allowed';
       break;
     case 500:
       errorMessage = 'Internal Server Error';
@@ -183,7 +183,7 @@ function storeRecord(req, res) {
 
   var query = {fname: fname, lname: lname};
 
-  var newData = {
+  var newRecord = {
     fname: fname,
     lname: lname,
     progLanguages: progLanguages,
@@ -191,7 +191,7 @@ function storeRecord(req, res) {
     hairColor: hairColor
   };
 
-  mongoose.model('Developer').findOneAndUpdate(query, newData, {upsert: true},function(err, record) {
+  mongoose.model('Developer').findOneAndUpdate(query, newRecord, {upsert: true},function(err, record) {
     if(err)
       next(err);
   });
@@ -217,7 +217,6 @@ function showPreferences(res, uname) {
       if(record['fname'] == uname) {
         myQuery = record;
       }
-
     });
 
     if(myQuery) {
@@ -287,7 +286,7 @@ function displayRecords(req, res) {
 
   res.status(200);
   res.set({'Cache-Control': 'no-cache'});
-  res.render('display', {records:filteredRecords,color:color});
+  res.render('display', {records:filteredRecords, color:color});
 
   }
   mongoose.model('Developer').find({}, recordList);
@@ -349,7 +348,7 @@ function filterRecordsByFirstName(res, firstname) {
 
       res.status(200);
       res.set({'Cache-Control': 'no-cache'});
-      res.render('display', {records:filteredRecords,color:''});
+      res.render('display', {records:filteredRecords, color:''});
 
   }
   mongoose.model('Developer').find({fname: new RegExp(firstname)}, recordList);
@@ -361,7 +360,7 @@ function filterRecordsByLastName(res, lastname) {
 
       res.status(200);
       res.set({'Cache-Control': 'no-cache'});
-      res.render('display', {records:filteredRecords,color:''});
+      res.render('display', {records:filteredRecords, color:''});
 
   }
   mongoose.model('Developer').find({lname: new RegExp(lastname)}, recordList);
