@@ -18,6 +18,7 @@ var allRecords = [];
 var allLang = ["C","JAVA","PYTHON","JAVA SCRIPT","OPA"];
 var allDays = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"];
 var allHairColors = ["brunette","blonde","black","other"];
+var err = new Error();
 
 app.get('/', function (req, res) {
 
@@ -150,6 +151,91 @@ router.get('/lastname/:name', function(req, res) {
 
 app.use('/get_coder', router);
 
+// ERROR HANDLER CODE
+app.post('/', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.post('/login', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('/multiform1', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('/multiform2', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+app.get('/multiform3', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('/multiform4', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('/multiform5', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('/multiform6', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('/remove', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('/post_coder', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.post('/coders', function (req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+router.post('/firstname/:name', function(req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+router.post('/lastname/:name', function(req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+app.get('*', function(req, res, next) {
+  err.status = 404;
+  next(err);
+});
+
+app.post('*', function(req, res, next) {
+  err.status = 404;
+  next(err);
+});
+
+router.get('*', function(req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
+router.post('*', function(req, res, next) {
+  err.status = 405;
+  next(err);
+});
+
 app.use(function(err, req, res, next) {
 
   var errorCode = err.status || 500;
@@ -161,6 +247,9 @@ app.use(function(err, req, res, next) {
       break;
     case 404:
       errorMessage = 'Resource Not Found';
+      break;
+    case 405:
+      errorMessage = 'Method not Allowed';
       break;
     case 500:
       errorMessage = 'Internal Server Error';
