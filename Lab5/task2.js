@@ -21,6 +21,7 @@ app.set('views', '.');
 var allLang = ["C","JAVA","PYTHON","JAVA SCRIPT","OPA"];
 var allDays = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"];
 var allHairColors = ["brunette","blonde","black","other"];
+var err = new Error();
 
 app.get('/', function (req, res) {
 
@@ -141,7 +142,7 @@ router.get('/lastname/:name', function(req, res) {
 
 app.use('/get_coder', router);
 
-// ERROR HANDLER CODE
+// ERROR HANDLER CODE STARTS
 app.post('/', function (req, res, next) {
   err.status = 405;
   next(err);
@@ -206,23 +207,13 @@ router.post('/lastname/:name', function(req, res, next) {
   next(err);
 });
 
-app.get('*', function(req, res, next) {
+app.all('*', function(req, res, next) {
   err.status = 404;
   next(err);
 });
 
-app.post('*', function(req, res, next) {
+router.all('*', function(req, res, next) {
   err.status = 404;
-  next(err);
-});
-
-router.get('*', function(req, res, next) {
-  err.status = 405;
-  next(err);
-});
-
-router.post('*', function(req, res, next) {
-  err.status = 405;
   next(err);
 });
 
@@ -252,6 +243,7 @@ app.use(function(err, req, res, next) {
          message: errorMessage
      });
 });
+// ERROR HANDLER CODE ENDS
 
 app.listen(8081);
 
