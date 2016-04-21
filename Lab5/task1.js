@@ -157,16 +157,6 @@ app.post('/', function (req, res, next) {
   next(err);
 });
 
-app.post('/login', function (req, res, next) {
-  err.status = 405;
-  next(err);
-});
-
-app.get('/multiform1', function (req, res, next) {
-  err.status = 405;
-  next(err);
-});
-
 app.get('/multiform2', function (req, res, next) {
   err.status = 405;
   next(err);
@@ -232,9 +222,6 @@ app.use(function(err, req, res, next) {
   var errorMessage = '';
 
   switch(errorCode) {
-    case 400:
-      errorMessage = 'This is Bad Request';
-      break;
     case 404:
       errorMessage = 'Resource Not Found';
       break;
@@ -253,7 +240,6 @@ app.use(function(err, req, res, next) {
      });
 });
 // ERROR HANDLER CODE ENDS
-
 
 app.listen(8081);
 
