@@ -1,6 +1,9 @@
 var mongoose = require('mongoose');
 var authorSchema = new mongoose.Schema({
-  id : Number,
+  id : {
+    type: Number,
+    unique: true
+  },
   fname: String,
   lname: String
   },  {

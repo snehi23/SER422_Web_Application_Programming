@@ -13,5 +13,6 @@ server.use(restify.fullResponse())
       .use(restify.bodyParser())
 
 server.post("/authors", author_controller.createAuthor);
+server.post("/books", book_controller.createBook);
 
 server.listen(8081);

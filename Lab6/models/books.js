@@ -1,10 +1,17 @@
 var mongoose = require('mongoose');
 var bookSchema = new mongoose.Schema({
-  isbn : String,
+  isbn : {
+    type: String,
+    required: true,
+    unique: true
+    },
   publisher: String,
   title: String,
   publish_year: Number,
-  author: Array
+  author:{
+    type: Array,
+    required: true
+  }
   },  {
   collection: 'books'
 });
