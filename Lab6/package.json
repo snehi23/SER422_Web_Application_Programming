@@ -1,0 +1,31 @@
+{
+  "name": "Web-Apps-Lab6",
+  "version": "0.1.0",
+  "contributors": [
+    {
+      "name": "Snehal Shendware",
+      "email": "snehal.shendware@asu.edu"
+    },
+    {
+      "name": "Manohara Rao Penumala",
+      "email": "mpenumal@asu.edu"
+    }
+  ],
+  "description": "REST API using Restify and MongoDB",
+  "main": "/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snehi23/SER422_Web_Application_Programming.git"
+  },
+  "author": "Snehal Shendware",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "restify": "^4.0.4",
+    "mongoose": "^4.4.12"
+  },
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=3.0.0"
+  }
+}
