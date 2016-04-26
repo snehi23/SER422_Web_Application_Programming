@@ -14,5 +14,7 @@ server.use(restify.fullResponse())
 
 server.post("/authors", author_controller.createAuthor);
 server.post("/books", book_controller.createBook);
+server.get("/authors/:id", author_controller.retrieveAuthor);
+server.get("/books/:isbn", book_controller.retrieveBook);
 
 server.listen(8081);

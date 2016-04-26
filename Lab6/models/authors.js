@@ -9,4 +9,4 @@ var authorSchema = new mongoose.Schema({
   },  {
   collection: 'authors'
 });
-mongoose.model('Author', authorSchema);
+module.exports.Author = mongoose.model('Author', authorSchema);
