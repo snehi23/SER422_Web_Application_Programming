@@ -6,7 +6,5 @@ var authorSchema = new mongoose.Schema({
   },
   fname: String,
   lname: String
-  },  {
-  collection: 'authors'
-});
+},  {collection: 'authors'});
 module.exports.Author = mongoose.model('Author', authorSchema);
