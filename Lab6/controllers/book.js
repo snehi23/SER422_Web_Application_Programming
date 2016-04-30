@@ -8,8 +8,7 @@ exports.createBook = function(req, res, next) {
     if(req.body.author == null || req.body.author == ['']) {
       res.status(403);
       res.json({
-          type: false,
-          data: "Author information required."
+          message: "Author information required."
       });
     }
     else {
@@ -18,14 +17,13 @@ exports.createBook = function(req, res, next) {
         if (err) {
           res.status(500);
           res.json({
-            type: false,
-            data: "Error occured: " + err
+                message: "Internal Server Error"
           });
         }
         else {
           res.json({
-            type: true,
-            data: book
+            message: "Book Created",
+            data: book.id
           });
         }
       });
@@ -38,12 +36,10 @@ exports.retrieveBookByISBN = function(req, res, next) {
       if (err) {
           res.status(500);
           res.json({
-              type: false,
-              data: "Error occured: " + err
+                message: "Internal Server Error"
           });
       } else {
           res.json({
-              type: true,
               data: book
           });
       }
@@ -52,16 +48,14 @@ exports.retrieveBookByISBN = function(req, res, next) {
 
 exports.retrieveBookByTitle = function(req, res, next) {
   var bookTitle = req.params.title;
-  Book.find({"title": bookTitle}, function(err, book) {
+  Book.find({"title": new RegExp(bookTitle)}, function(err, book) {
       if (err) {
           res.status(500);
           res.json({
-              type: false,
-              data: "Error occured: " + err
+              message: "Internal Server Error"
           });
       } else {
           res.json({
-              type: true,
               data: book
           });
       }
@@ -74,36 +68,67 @@ exports.deleteBook = function(req, res, next) {
       if (err) {
           res.status(500);
           res.json({
-              type: false,
-              data: "Error occured: " + err
+              message: "Internal Server Error"
           });
       } else {
           res.json({
-              type: true,
-              data: book
+              message: "Book Deleted"
           });
       }
   });
 }
 
 exports.updateBook = function(req, res, next) {
-      var data =  req.body;
-      var bookModel = new Book(data);
-      bookModel.save(function(err, book) {
+    var bookModel = new Book(req.body);
+    Book.find({"isbn": bookModel.isbn}, function(err, book) {
+
         if (err) {
-          res.status(500);
-          res.json({
-            type: false,
-            data: "Error occured: " + err
-          });
+            res.status(500);
+            res.json({
+                message: "Internal Server Error"
+            });
+        } else {
+
+          if(book == []) {
+            bookModel.save(function(err, book) {
+              if (err) {
+                res.status(500);
+                res.json({
+                  message: "Internal Server Error"
+                });
+              }
+              else {
+                res.json({
+                  message: "Book Updated",
+                  data: book.isbn
+                });
+              }
+            });
+          } else {
+
+            book[0].publisher = bookModel.publisher;
+            book[0].title = bookModel.title;
+            book[0].publish_year = bookModel.publish_year;
+
+            book[0].save(function(err, book) {
+              if (err) {
+                res.status(500);
+                res.json({
+                  message: "Internal Server Error"
+                });
+              }
+              else {
+                res.json({
+                  message: "Book Created",
+                  data: book.isbn
+                });
+              }
+            });
+          }
         }
-        else {
-          res.json({
-            type: true,
-            data: book
-          });
-        }
-      });
+
+    });
+
 }
 
 exports.addAuthorToBook = function(req, res, next) {
@@ -121,12 +146,11 @@ exports.addAuthorToBook = function(req, res, next) {
         if (err) {
             res.status(500);
             res.json({
-                type: false,
-                data: "Error occured: " + err
+                  message: "Internal Server Error"
             });
         } else {
             res.json({
-                type: true,
+                message: "Book Updated",
                 data: book
             });
         }

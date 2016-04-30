@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    Author = mongoose.model("Author")
+    Author = mongoose.model("Author"),
+    Book = mongoose.model("Book")
 
 exports.createAuthor = function(req, res, next) {
     var authorModel = new Author(req.body);
@@ -7,13 +8,12 @@ exports.createAuthor = function(req, res, next) {
       if (err) {
         res.status(500);
         res.json({
-          type: false,
-          data: "Error occured: " + err
+          message: "Internal Server Error"
         });
       }
       else {
         res.json({
-          type: true,
+          message: "Author Created",
           data: author
         });
       }
@@ -26,12 +26,10 @@ exports.retrieveAuthor = function(req, res, next) {
       if (err) {
           res.status(500);
           res.json({
-              type: false,
-              data: "Error occured: " + err
+              message: "Internal Server Error"
           });
       } else {
           res.json({
-              type: true,
               data: author
           });
       }
@@ -40,25 +38,39 @@ exports.retrieveAuthor = function(req, res, next) {
 
 exports.deleteAuthor = function(req, res, next) {
   var authorID = req.params.id;
-  Book.find({"author": authorID}, function(err, book) {
-      if (err) {
+  isDelete = false;
+
+  Book.find({}, function(err, books) {
+
+      books.forEach(function(book) {
+
+            var bookauthorlist = book.author;
+            var authorids = bookauthorlist[0].split(',');
+            if (authorids.indexOf(authorID) == -1) {
+                isDelete = true;
+            }
+
+      });
           if (isDelete) {
           Author.remove({"id": authorID}, function(err, author) {
             if (err) {
               res.status(500);
               res.json({
-                type: false,
-                data: "Error occured: " + err
+                message: "Internal Server Error"
               });
               } else {
                 res.json({
-                  type: true,
-                  data: author
+                  message: "Author Deleted"
               });
             }
-        });
-      }
-    }
+          });
+        } else {
+
+              res.json({
+                  message: "Can not delete. Book contains Author"
+              });
+
+        }
   });
 }
 
@@ -70,8 +82,7 @@ exports.updateAuthor = function(req, res, next) {
         if (err) {
             res.status(500);
             res.json({
-                type: false,
-                data: "Error occured: " + err
+                message: "Internal Server Error"
             });
         } else {
 
@@ -80,14 +91,13 @@ exports.updateAuthor = function(req, res, next) {
               if (err) {
                 res.status(500);
                 res.json({
-                  type: false,
-                  data: "Error occured: " + err
+                  message: "Internal Server Error"
                 });
               }
               else {
                 res.json({
-                  type: true,
-                  data: author
+                  message: "Author Updated",
+                  data: author.id
                 });
               }
             });
@@ -100,14 +110,13 @@ exports.updateAuthor = function(req, res, next) {
               if (err) {
                 res.status(500);
                 res.json({
-                  type: false,
-                  data: "Error occured: " + err
+                  message: "Internal Server Error"
                 });
               }
               else {
                 res.json({
-                  type: true,
-                  data: author
+                  message: "Author Created",
+                  data: author.id
                 });
               }
             });
