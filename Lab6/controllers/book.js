@@ -4,7 +4,6 @@ var mongoose = require('mongoose'),
 exports.createBook = function(req, res, next) {
 
     var data =  req.body;
-    console.log(req.body.author);
     if(req.body.author == null || req.body.author == ['']) {
       res.status(403);
       res.json({
@@ -99,7 +98,7 @@ exports.updateBook = function(req, res, next) {
               }
               else {
                 res.json({
-                  message: "Book Updated",
+                  message: "Book Created",
                   data: book.isbn
                 });
               }
@@ -119,7 +118,7 @@ exports.updateBook = function(req, res, next) {
               }
               else {
                 res.json({
-                  message: "Book Created",
+                  message: "Book Updated",
                   data: book.isbn
                 });
               }
@@ -138,7 +137,8 @@ exports.addAuthorToBook = function(req, res, next) {
 
   Book.find({"isbn":bookISBN}, function(err, book) {
     var authorArray = book[0]["author"];
-    authorArray.push(newAuthorID);
+    authorArray = authorArray+','+newAuthorID;
+    //authorArray = authorArray.concat(','+newAuthorID);
     var update = {"author": authorArray};
     var options = {};
 
@@ -151,7 +151,7 @@ exports.addAuthorToBook = function(req, res, next) {
         } else {
             res.json({
                 message: "Book Updated",
-                data: book
+                data: book.isbn
             });
         }
     });

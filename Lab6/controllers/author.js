@@ -41,18 +41,15 @@ exports.deleteAuthor = function(req, res, next) {
   isDelete = true;
 
   Book.find({}, function(err, books) {
-    console.log(books.length);
       for (var i = 0; i < books.length; i++) {
         var bookauthorlist = books[i].author;
         var authorids = bookauthorlist[0].split(',');
-        console.log(authorids);
         if (authorids.indexOf(authorID) > -1) {
             isDelete = false;
             break;
         }
       }
 
-      console.log(isDelete);
           if (isDelete) {
           Author.remove({"id": authorID}, function(err, author) {
             if (err) {
@@ -98,7 +95,7 @@ exports.updateAuthor = function(req, res, next) {
               }
               else {
                 res.json({
-                  message: "Author Updated",
+                  message: "Author Created",
                   data: author.id
                 });
               }
@@ -117,7 +114,7 @@ exports.updateAuthor = function(req, res, next) {
               }
               else {
                 res.json({
-                  message: "Author Created",
+                  message: "Author Updated",
                   data: author.id
                 });
               }
