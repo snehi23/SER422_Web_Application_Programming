@@ -42,6 +42,42 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /authors:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: add-author
+    post:
+      description: create author with parameters
+      # used as the method name of the controller
+      operationId: createAuthor
+      parameters:
+        - name: id
+          in: body
+          description: author id
+          required: true
+          type: integer
+        - name: fname
+          in: body
+          description: author first name
+          required: true
+          type: string
+        - name: lname
+          in: body
+          description: author last name
+          required: true
+          type: string  
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/Author"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"        
+            
+            
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -52,6 +88,21 @@ definitions:
     properties:
       message:
         type: string
+  Author:      
+    type: object
+    properties:
+      id:
+        type: integer
+        required: true
+        description: author id
+      fname:
+        type: string
+        required: true
+        description: Description of product.
+      lname:
+        type: string
+        required: true
+        description: Display name of product.
   ErrorResponse:
     required:
       - message
