@@ -14,7 +14,7 @@ exports.createAuthor = function(req, res, next) {
       else {
         res.json({
           message: "Author Created",
-          data: author
+          data: author.id
         });
       }
     });
@@ -38,19 +38,21 @@ exports.retrieveAuthor = function(req, res, next) {
 
 exports.deleteAuthor = function(req, res, next) {
   var authorID = req.params.id;
-  isDelete = false;
+  isDelete = true;
 
   Book.find({}, function(err, books) {
+    console.log(books.length);
+      for (var i = 0; i < books.length; i++) {
+        var bookauthorlist = books[i].author;
+        var authorids = bookauthorlist[0].split(',');
+        console.log(authorids);
+        if (authorids.indexOf(authorID) > -1) {
+            isDelete = false;
+            break;
+        }
+      }
 
-      books.forEach(function(book) {
-
-            var bookauthorlist = book.author;
-            var authorids = bookauthorlist[0].split(',');
-            if (authorids.indexOf(authorID) == -1) {
-                isDelete = true;
-            }
-
-      });
+      console.log(isDelete);
           if (isDelete) {
           Author.remove({"id": authorID}, function(err, author) {
             if (err) {
