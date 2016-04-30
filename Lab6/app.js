@@ -20,8 +20,7 @@ server.get("/books/title/:title", book_controller.retrieveBookByTitle);
 server.del("/authors/:id", author_controller.deleteAuthor);
 server.del("/books/:isbn", book_controller.deleteBook);
 server.patch("/books/:isbn", book_controller.addAuthorToBook);
-//TODO
-//server.put("/authors", author_controller.updateAuthor);
-//server.put("/books", book_controller.updateBook);
+server.put("/authors", author_controller.updateAuthor);
+server.put("/books", book_controller.updateBook);
 
 server.listen(8081);

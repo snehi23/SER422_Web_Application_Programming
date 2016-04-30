@@ -64,19 +64,56 @@ exports.deleteAuthor = function(req, res, next) {
 
 exports.updateAuthor = function(req, res, next) {
     var authorModel = new Author(req.body);
-    authorModel.save(function(err, author) {
-      if (err) {
-        res.status(500);
-        res.json({
-          type: false,
-          data: "Error occured: " + err
-        });
-      }
-      else {
-        res.json({
-          type: true,
-          data: author
-        });
-      }
+
+    Author.find({"id": authorModel.id}, function(err, author) {
+
+        if (err) {
+            res.status(500);
+            res.json({
+                type: false,
+                data: "Error occured: " + err
+            });
+        } else {
+
+          if(author == []) {
+            authorModel.save(function(err, author) {
+              if (err) {
+                res.status(500);
+                res.json({
+                  type: false,
+                  data: "Error occured: " + err
+                });
+              }
+              else {
+                res.json({
+                  type: true,
+                  data: author
+                });
+              }
+            });
+          } else {
+
+            author[0].fname = authorModel.fname;
+            author[0].lname = authorModel.lname;
+
+            author[0].save(function(err, author) {
+              if (err) {
+                res.status(500);
+                res.json({
+                  type: false,
+                  data: "Error occured: " + err
+                });
+              }
+              else {
+                res.json({
+                  type: true,
+                  data: author
+                });
+              }
+            });
+          }
+        }
+
     });
+
 }
